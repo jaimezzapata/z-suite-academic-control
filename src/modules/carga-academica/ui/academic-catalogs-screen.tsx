@@ -347,7 +347,7 @@ export function AcademicCatalogsScreen({
 
   return (
     <section className="space-y-4 text-slate-950">
-      <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:p-5">
+      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:p-5">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl">
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-slate-500">
@@ -498,7 +498,7 @@ function CatalogCard({
   return (
     <article
       id={id}
-      className="rounded-b-[1.5rem] rounded-r-[1.5rem] border border-slate-200 bg-white p-3.5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:p-4"
+      className="rounded-b-3xl rounded-r-3xl border border-slate-200 bg-white p-3.5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:p-4"
     >
       <div className="flex flex-col gap-3">
         <div>

@@ -61,7 +61,7 @@ export function AcademicLoadCreateModal({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[960px] flex-col overflow-hidden rounded-[1.5rem] border border-slate-200 bg-[#f6f7fb] shadow-[0_24px_80px_rgba(15,23,42,0.16)] max-h-[calc(100dvh-1.5rem)] sm:rounded-[1.75rem] lg:max-w-5xl">
+      <div className="relative z-10 mx-auto flex w-full max-w-240 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-[#f6f7fb] shadow-[0_24px_80px_rgba(15,23,42,0.16)] max-h-[calc(100dvh-1.5rem)] sm:rounded-[1.75rem] lg:max-w-5xl">
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-5 sm:py-4 lg:px-6">
           <div className="max-w-2xl">
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-slate-500">
