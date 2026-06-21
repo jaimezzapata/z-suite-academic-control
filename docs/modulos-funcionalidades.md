@@ -34,6 +34,8 @@ La estructura funcional general del sistema queda asi:
 
 El modulo central del sistema es `Carga academica`, porque desde ahi se desprenden la mayor parte de relaciones del negocio.
 
+Adicionalmente, el sistema debe incluir autenticacion simple como capacidad transversal, sin tratarla como un modulo principal visible del negocio.
+
 ## Modulo 1: Panel
 
 ### Proposito
@@ -105,6 +107,7 @@ Representar el trabajo academico real que te asignan y que conecta casi todos lo
 - registrar asignaciones o cargas
 - asociar institucion y periodo
 - asociar materia y grupo
+- registrar carga horaria asignada
 - registrar modalidad, sede u observaciones
 - servir como origen para horarios, nomina, documentos y examenes
 
@@ -114,6 +117,7 @@ Representar el trabajo academico real que te asignan y que conecta casi todos lo
 - periodo
 - materia
 - grupo
+- carga horaria asignada
 - modalidad
 - sede
 - estado
@@ -129,8 +133,9 @@ Registrar y visualizar la distribucion del tiempo academico y laboral.
 
 - crear bloques de horario
 - asociar horario a carga academica
+- distribuir la carga horaria asignada en dias y horas
 - visualizar horario por dia y hora
-- calcular carga horaria
+- validar coherencia frente a la carga horaria asignada
 - servir como base para nomina y planeacion
 
 ### Datos principales
@@ -165,11 +170,32 @@ Controlar ingresos esperados, pagos recibidos y diferencias por institucion o pe
 - institucion
 - periodo
 - carga academica
+- carga horaria asignada
 - concepto de pago
 - monto esperado
 - monto recibido
 - diferencia
 - fecha de pago
+
+## Capacidad transversal: Autenticacion
+
+### Proposito
+
+Proteger el acceso a la aplicacion sin convertir la autenticacion en un modulo principal del negocio.
+
+### Alcance inicial
+
+- login
+- logout
+- proteccion de rutas
+- sesion persistente
+
+### Alcance fuera de esta etapa
+
+- registro publico
+- recuperacion de contrasena
+- roles complejos
+- multiusuario
 
 ## Modulo 7: Pendientes
 
@@ -257,8 +283,8 @@ Preparar la aplicacion para trabajar con archivos y servicios externos en una et
 
 - `instituciones` define reglas de operacion, pago y estructura documental
 - `periodos` organiza el contexto temporal bajo la logica `anio > institucion > periodo`
-- `carga academica` conecta materia, grupo, horario, examenes y documentos
-- `horarios` alimenta `nomina`
+- `carga academica` conecta materia, grupo, carga horaria asignada, horario, examenes y documentos
+- `horarios` distribuye la carga asignada y alimenta `nomina`
 - `pendientes` puede originarse desde cualquier modulo
 - `drive` depende de `instituciones`, `periodos` y `grupos`
 

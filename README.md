@@ -58,6 +58,8 @@ La estructura funcional general del sistema se entiende asi:
 
 El modulo central del sistema es `Carga academica`, porque desde ahi se conectan la mayor parte de relaciones del negocio.
 
+En este modelo, la `carga horaria asignada` puede entrar primero como dato de la carga academica, y el modulo `Horarios` se encarga de distribuir esa carga en dias y horas.
+
 ## Enfoque Arquitectonico
 
 El proyecto se construira bajo dos lineamientos principales:
@@ -71,6 +73,8 @@ Cada modulo, archivo o pieza del sistema debe tener una sola razon de cambio.
 La estructura del proyecto debe gritar el negocio antes que la tecnologia.
 
 Eso significa que la base del proyecto no deberia comenzar por carpetas como `components`, `services` o `utils`, sino por los modulos reales del producto.
+
+La autenticacion existira como capacidad transversal del sistema, no como modulo principal del negocio.
 
 Ejemplo conceptual:
 
@@ -154,6 +158,7 @@ Ese nucleo permitira despues conectar examenes, documentos, drive e integracione
 
 ### Fase 1
 
+- Autenticacion simple de usuario unico
 - Gestion de instituciones
 - Gestion de periodos
 - Gestion de carga academica

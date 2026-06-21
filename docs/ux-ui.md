@@ -11,6 +11,8 @@ La UX/UI debe hacer que el sistema se sienta:
 - confiable
 - ordenado
 - conectado entre modulos
+- minimalista
+- con color bien controlado
 
 ## Idea general del producto
 
@@ -58,6 +60,12 @@ El sistema debe reducir trabajo manual, repetitivo y duplicado.
 
 La interfaz debe poder crecer sin perder consistencia cuando entren modulos como nomina, examenes o formatos.
 
+### 6. Identidad visual con personalidad
+
+La aplicacion no debe sentirse plana ni excesivamente corporativa.
+
+Debe tener una identidad con color y personalidad, pero desde una base limpia, calmada y sobria.
+
 ## Perfil de uso
 
 La app esta pensada como una herramienta de uso frecuente, casi diario, para una sola persona o un uso muy personal.
@@ -71,6 +79,41 @@ Por lo tanto, la experiencia debe favorecer:
 - filtros utiles
 
 ## Estructura UX sugerida
+
+### Login
+
+El login debe ser la primera experiencia fuerte del producto.
+
+Debe transmitir tres ideas desde el primer momento:
+
+- control
+- organizacion
+- claridad
+
+#### Objetivo del login
+
+- permitir acceso rapido
+- dejar claro que es una herramienta personal y moderna
+- conectar visualmente con el resto de la aplicacion
+
+#### Flujo recomendado
+
+- pantalla limpia de acceso
+- boton principal de `Continuar con Google`
+- mensaje corto que explique el proposito de la app
+- estado visual claro de carga, error y exito
+
+#### Criterios de diseño del login
+
+- composicion simple y limpia
+- jerarquia clara entre branding y accion principal
+- poco texto
+- uso medido del color
+- experiencia breve, sin pasos innecesarios
+
+#### Sensacion buscada
+
+No debe parecer un login generico. Debe sentirse como entrada a un centro de control personal academico y laboral, pero sin saturacion visual.
 
 ### Panel principal
 
@@ -115,8 +158,74 @@ Cada modulo debe repetir un patron consistente:
 - profesional
 - limpio
 - moderno
+- colorido
 - sobrio
 - funcional
+
+### Direccion visual
+
+La interfaz debe mezclar:
+
+- estructura clara para productividad
+- color suficiente para dar vida y personalidad
+- recursos visuales muy medidos
+
+### Personalidad visual
+
+La aplicacion debe sentirse:
+
+- serena
+- clara
+- confiable
+- organizada
+- contemporanea
+
+No debe sentirse:
+
+- aburrida
+- demasiado corporativa
+- gris
+- generica
+- sobrecargada
+- estridente
+- neon
+
+### Paleta conceptual
+
+La paleta puede construirse alrededor de una combinacion como esta:
+
+- azul profundo para confianza, estructura y enfoque
+- verde o turquesa para crecimiento, control y claridad
+- naranja o amarillo para energia, alertas y accion
+- morado como acento para identidad visual y contraste
+- neutros suaves para fondos, superficies y lectura
+
+La idea no es usar todos los colores al mismo nivel, sino construir una interfaz limpia donde cada color tenga una funcion puntual.
+
+### Uso del color
+
+- un color principal para identidad base
+- un color secundario para elementos de apoyo
+- colores de estado para exito, advertencia y error
+- acentos graficos para cards, bloques, indicadores y accesos rapidos
+
+### Estilo grafico
+
+Se recomienda una interfaz con recursos visuales como:
+
+- formas geometricas sutiles
+- iconografia clara
+- tarjetas limpias con acentos de color planos
+- superficies claras y respirables
+
+Todo esto debe apoyar la lectura, no competir con ella.
+
+Quedan prohibidos como direccion visual base:
+
+- neones
+- degradados o gradientes
+- fondos estridentes
+- efectos brillantes exagerados
 
 ### Densidad visual
 
@@ -147,12 +256,36 @@ La UI deberia apoyarse en componentes reutilizables como:
 - badges de estado
 - timeline o lista de pendientes
 - calendario o vistas de agenda
+- metricas visuales con grafica simple
+- bloques destacados para accesos rapidos
+
+## Sistema visual del producto
+
+### Elementos que deben destacar
+
+- resumenes numericos
+- proximos eventos
+- estados de pago
+- carga academica activa
+- indicadores de avance o pendientes
+
+### Lenguaje visual esperado
+
+- cards limpias con acentos discretos
+- iconos por modulo
+- encabezados claros
+- bloques de informacion facil de escanear
+- combinacion equilibrada de texto, color y datos
 
 ## Experiencia por modulo
 
 ### Panel
 
 Debe mostrar una vista mixta de agenda, pendientes y nomina, porque ese es el resumen real que necesitas al entrar a la app.
+
+Visualmente debe ser uno de los modulos mas expresivos del sistema, con tarjetas, indicadores y bloques graficos que permitan entender el estado general de un vistazo.
+
+Esa expresividad no debe depender de degradados ni efectos intensos, sino de una buena jerarquia, color plano y composicion limpia.
 
 ### Instituciones
 
@@ -179,15 +312,21 @@ Aqui deberias poder ver de forma clara:
 
 Debe tener vistas faciles de escanear, idealmente por tabla y calendario.
 
+Debe aprovechar color por institucion, periodo o tipo de bloque para facilitar lectura rapida.
+
 ### Pendientes
 
 Debe ser uno de los modulos mas accesibles y accionables del sistema.
+
+Debe usar una señal visual fuerte para prioridad, vencimiento y estado.
 
 ### Nomina
 
 Debe enfocarse en comparacion clara entre esperado, recibido y diferencia.
 
 En especial, para CESDE debe ayudar a entender cuanto deberia llegar segun horas programadas y cortes de pago.
+
+Debe apoyarse en codigos visuales muy claros para mostrar diferencia positiva, alerta o inconsistencia.
 
 ### Examenes
 
@@ -232,6 +371,10 @@ Cada vista debe contemplar:
 La aplicacion debe sentirse como un centro de control personal: ordenado, confiable y enfocado en productividad real, no en decoracion visual innecesaria.
 
 Tambien debe sentirse cercana a tu lenguaje real de trabajo. Por eso los nombres visibles de los modulos deben mantenerse naturales y alineados con tu dia a dia.
+
+Ademas, debe proyectar una identidad visual mas rica: una herramienta productiva que no se siente fria, sino visualmente estimulante y facil de habitar todos los dias.
+
+La riqueza visual debe construirse desde el equilibrio: minimalismo, color bien usado y limpieza general.
 
 ## Conclusion
 

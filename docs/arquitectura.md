@@ -39,11 +39,12 @@ El sistema se construira bajo el principio S de SOLID: cada modulo, archivo, com
 
 Esto implica:
 
-- un componente visual solo renderiza interfaz y gestiona interaccion de UI
+- un componente visual solo renderiza interfaz y recibe props o callbacks
 - un caso de uso ejecuta una sola accion del negocio
 - un repositorio encapsula acceso a datos
 - un esquema valida datos de entrada
 - una entidad representa una responsabilidad del dominio
+- la logica, efectos, transformaciones de datos y comportamiento reutilizable viven fuera del componente
 
 ### 2. Screaming Architecture
 
@@ -75,6 +76,8 @@ Se propone una arquitectura modular, orientada al dominio, con separacion entre:
 - capa de dominio
 - capa de infraestructura
 
+Ademas, el sistema debe contemplar una capacidad transversal de autenticacion simple para proteger el acceso a la aplicacion desde el inicio.
+
 ## Capas propuestas
 
 ### Presentacion
@@ -90,6 +93,26 @@ Responsable de:
 - interaccion del usuario
 
 No debe contener reglas complejas del negocio.
+
+Los componentes deben enfocarse en:
+
+- estructura visual
+- composicion de interfaz
+- recepcion de props
+- disparo de eventos o callbacks
+
+No deben encargarse de:
+
+- obtener o transformar datos de negocio
+- construir view models complejos dentro del JSX
+- encapsular reglas funcionales
+- mezclar acceso a servicios o persistencia
+
+Cuando haya logica o funcionalidad, esta debe salir del componente y vivir en:
+
+- hooks, si se trata de comportamiento de UI o estado del cliente
+- funciones o adaptadores, si se trata de preparar datos o construir view models
+- casos de uso, si se trata de acciones del negocio
 
 ### Aplicacion
 
@@ -135,6 +158,19 @@ Responsable de detalles tecnicos como:
 - implementaciones concretas de repositorios
 
 La infraestructura depende del dominio, no al reves.
+
+## Autenticacion inicial
+
+La autenticacion no se modela como un modulo principal del negocio.
+
+Se considera una capacidad transversal del sistema y en esta etapa inicial debe resolver solamente:
+
+- login
+- logout
+- proteccion de rutas
+- sesion persistente
+
+El alcance inicial es de usuario unico, sin registro publico, sin recuperacion de contrasena y sin roles complejos.
 
 ## Estructura sugerida
 
@@ -221,6 +257,7 @@ La carpeta `app/` se mantiene temporalmente en la raiz para no mezclar el arranq
 - evitar componentes enormes con logica de negocio incrustada
 - evitar acciones de base de datos directamente desde componentes visuales
 - evitar crear carpetas principales que no expresen negocio
+- los componentes de UI deben quedarse en presentacion; la logica debe salir a hooks o funciones aparte
 
 ## Estructura global del negocio
 
@@ -261,6 +298,21 @@ La razon es que desde ahi se conectan:
 
 Esto significa que `carga-academica` no es solo un modulo mas. Es el punto donde nace el trabajo real que despues alimenta otros procesos.
 
+## Relacion entre carga academica y horarios
+
+En este proyecto, la `carga horaria` no debe entenderse solo como un dato calculado.
+
+En tu flujo real, la institucion puede asignar primero una cantidad de horas y esa carga es la que luego define como construyes el horario.
+
+Por eso:
+
+- `carga-academica` registra lo que fue asignado
+- `carga-academica` puede incluir la carga horaria asignada como dato de entrada
+- `horarios` distribuye esa carga en dias y bloques concretos
+- `nomina` consume la carga asignada y la distribucion horaria segun las reglas de la institucion
+
+Esto permite mantener el mismo encarpetado principal sin confundir responsabilidades.
+
 ## Entidades iniciales del dominio
 
 Las entidades principales detectadas hasta ahora son:
@@ -269,6 +321,7 @@ Las entidades principales detectadas hasta ahora son:
 - anio
 - periodo
 - carga academica
+- carga horaria asignada
 - horario
 - materia
 - grupo
@@ -284,8 +337,8 @@ La arquitectura debe permitir relaciones claras entre dominios:
 
 - `instituciones` define reglas distintas de operacion, pago y estructura documental
 - `periodos` organiza el trabajo bajo la logica `anio > institucion > periodo`
-- `carga-academica` conecta materias, grupos, horarios y actividad real
-- `horarios` alimenta a `nomina`
+- `carga-academica` conecta materias, grupos, carga horaria asignada, horarios y actividad real
+- `horarios` distribuye la carga horaria asignada y alimenta a `nomina`
 - `nomina` depende especialmente de `instituciones`, `periodos`, `carga-academica` y `horarios`
 - `pendientes` puede originarse desde cualquier modulo
 - `examenes` y `documentos` dependen del contexto academico definido en `carga-academica`
