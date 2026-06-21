@@ -102,6 +102,8 @@ Debe transmitir tres ideas desde el primer momento:
 - boton principal de `Continuar con Google`
 - mensaje corto que explique el proposito de la app
 - estado visual claro de carga, error y exito
+- transicion suave antes y despues de redireccionar
+- notificacion discreta para confirmar inicio o cierre de sesion
 
 #### Criterios de diseño del login
 
@@ -231,6 +233,34 @@ Quedan prohibidos como direccion visual base:
 
 La interfaz no debe ser recargada. Debe tener suficiente aire para leer y operar rapido.
 
+### Transiciones y feedback
+
+Las acciones sensibles del sistema no deben sentirse bruscas.
+
+Esto aplica especialmente a:
+
+- inicio de sesion
+- cierre de sesion
+- redirecciones importantes
+- guardado de formularios
+- cambios de estado relevantes
+
+Regla de diseño:
+
+- usar microtransiciones o cambios sutiles de estado en botones
+- mostrar estados intermedios claros como `redirigiendo`, `guardando` o `cerrando sesion`
+- usar notificaciones discretas para confirmar exito, error o proceso en curso
+- evitar overlays pesados, animaciones exageradas o interrupciones innecesarias
+
+La notificacion ideal en esta app debe sentirse:
+
+- breve
+- clara
+- elegante
+- no invasiva
+
+Se prefiere una libreria de notificaciones sobria y minimalista, integrada al sistema visual general.
+
 ### Jerarquia
 
 Debe existir una jerarquia clara entre:
@@ -349,6 +379,7 @@ Cada vista debe contemplar:
 - estado con datos
 - estado de error
 - estado de exito despues de guardar
+- estado transicional cuando una accion dispara navegacion o redireccion
 
 ## Lineamientos de usabilidad
 
