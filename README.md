@@ -203,6 +203,80 @@ Motivos principales:
 - Escala mejor para autenticacion, integraciones, documentos y automatizaciones.
 - TypeScript aporta orden y seguridad en una app con mucha logica de negocio.
 
+## Estado Actual Del Desarrollo
+
+Actualmente el proyecto ya no esta solo en fase conceptual. Se avanzaron piezas funcionales y una primera base real de persistencia.
+
+Estado actual resumido:
+
+- autenticacion inicial con Google usando `Auth.js`
+- pantalla de login alineada con la linea visual minimalista + color
+- shell principal con `sidebar` persistente y perfil autenticado
+- modulo inicial de `Carga academica` con listado y modal de creacion
+- formulario guiado por metadatos para sede, jornada, grupo, materia, fechas, dias, horas y salon
+- notificaciones globales con `sonner`
+- base de datos en `Supabase` conectada con `Prisma`
+- esquema inicial de `Prisma` para instituciones, periodos, catalogos y carga academica
+
+## Prisma Y Supabase
+
+La persistencia actual del proyecto se apoya en:
+
+- `Supabase` como proveedor de PostgreSQL
+- `Prisma 7` como ORM
+- `@prisma/adapter-pg` para el cliente de Prisma en runtime
+- `prisma.config.ts` para la configuracion de datasource y migraciones
+
+Archivos clave:
+
+- `prisma/schema.prisma`
+- `prisma.config.ts`
+- `src/shared/lib/prisma.ts`
+
+### Variables necesarias
+
+Se deben definir en `.env.local`:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://USER:PASSWORD@HOST:5432/postgres"
+```
+
+Regla practica:
+
+- `DATABASE_URL` se usa para el cliente de la app
+- `DIRECT_URL` se usa para migraciones e introspeccion
+
+### Scripts disponibles
+
+```bash
+npm run prisma:format
+npm run prisma:validate
+npm run prisma:generate
+npm run prisma:db:pull
+npm run prisma:migrate:dev -- --name init
+npm run prisma:studio
+```
+
+### Flujo recomendado con Prisma
+
+1. Ajustar `DATABASE_URL` y `DIRECT_URL` en `.env.local`
+2. Revisar o editar `prisma/schema.prisma`
+3. Validar el schema con `npm run prisma:validate`
+4. Generar el cliente con `npm run prisma:generate`
+5. Crear la migracion inicial con `npm run prisma:migrate:dev -- --name init`
+6. Abrir `Prisma Studio` si se necesita revisar datos
+
+### Nota importante sobre Prisma 7
+
+En esta version:
+
+- la conexion ya no se declara con `url` dentro de `schema.prisma`
+- la configuracion del datasource vive en `prisma.config.ts`
+- la CLI de Prisma se configuro para cargar `.env.local` de forma explicita
+
+Esto evita inconsistencias con Next.js, que normalmente si reconoce `.env.local` automaticamente.
+
 ## Estado Actual
 
 Actualmente este repositorio funciona como base inicial y espacio de planeacion del producto.
@@ -215,6 +289,8 @@ La prioridad en esta etapa es:
 - priorizar el MVP
 - preparar la arquitectura correcta antes de implementar
 - alinear el proyecto con `Screaming Architecture`
+- consolidar persistencia real con `Supabase` + `Prisma`
+- empezar a reemplazar mocks del modulo `carga-academica` por datos reales
 
 ## Proposito De Este README
 

@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PeriodType {
+  SEMESTER
+  TRIMESTER
+  SPECIAL
+}
+
+enum PaymentFrequency {
+  BIWEEKLY
+  MONTHLY
+}
+
+enum PaymentModel {
+  HOURLY
+  FIXED
+}
+
+enum ContractType {
+  FIXED_TERM
+  SERVICE_CONTRACT
+}
+
+enum AcademicLoadStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ClassDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Institution {
+  id               String           @id @default(cuid())
+  name             String
+  slug             String           @unique
+  periodType       PeriodType
+  paymentFrequency PaymentFrequency
+  paymentModel     PaymentModel
+  contractType     ContractType
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  periods          AcademicPeriod[]
+  campuses         Campus[]
+  shifts           Shift[]
+  groups           AcademicGroup[]
+  subjects         Subject[]
+  classrooms       Classroom[]
+  academicLoads    AcademicLoad[]
+
+  @@unique([name])
+}
+
+model AcademicPeriod {
+  id            String         @id @default(cuid())
+  institutionId String
+  year          Int
+  label         String
+  slug          String
+  startsOn      DateTime       @db.Date
+  endsOn        DateTime       @db.Date
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, year, slug])
+  @@index([institutionId, year])
+}
+
+model Campus {
+  id            String         @id @default(cuid())
+  institutionId String
+  name          String
+  slug          String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, slug])
+  @@index([institutionId])
+}
+
+model Shift {
+  id            String         @id @default(cuid())
+  institutionId String
+  name          String
+  slug          String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, slug])
+  @@index([institutionId])
+}
+
+model AcademicGroup {
+  id            String         @id @default(cuid())
+  institutionId String
+  name          String
+  slug          String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, slug])
+  @@index([institutionId])
+}
+
+model Subject {
+  id            String         @id @default(cuid())
+  institutionId String
+  name          String
+  slug          String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, slug])
+  @@index([institutionId])
+}
+
+model Classroom {
+  id            String         @id @default(cuid())
+  institutionId String
+  name          String
+  slug          String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  academicLoads AcademicLoad[]
+
+  @@unique([institutionId, slug])
+  @@index([institutionId])
+}
+
+model AcademicLoad {
+  id            String             @id @default(cuid())
+  institutionId String
+  periodId      String
+  campusId      String
+  shiftId       String
+  groupId       String
+  subjectId     String
+  classroomId   String
+  startsOn      DateTime           @db.Date
+  endsOn        DateTime           @db.Date
+  teachingDays  ClassDay[]
+  startsAt      String
+  endsAt        String
+  status        AcademicLoadStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  institution   Institution        @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  period        AcademicPeriod     @relation(fields: [periodId], references: [id], onDelete: Restrict)
+  campus        Campus             @relation(fields: [campusId], references: [id], onDelete: Restrict)
+  shift         Shift              @relation(fields: [shiftId], references: [id], onDelete: Restrict)
+  group         AcademicGroup      @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  subject       Subject            @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  classroom     Classroom          @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+
+  @@index([institutionId])
+  @@index([periodId])
+  @@index([status])
+  @@index([startsOn, endsOn])
+}

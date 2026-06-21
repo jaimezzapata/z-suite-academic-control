@@ -81,6 +81,61 @@ Sera el ORM del proyecto.
 - hace mas claro el modelo del sistema
 - permite evolucionar el schema con orden
 
+### Implementacion actual
+
+La configuracion base de `Prisma` ya fue incorporada al proyecto con:
+
+- `prisma/schema.prisma`
+- `prisma.config.ts`
+- `src/shared/lib/prisma.ts`
+- `@prisma/client`
+- `@prisma/adapter-pg`
+- `pg`
+
+La conexion actual se realiza contra `Supabase` usando:
+
+- `DATABASE_URL` para el cliente de la aplicacion
+- `DIRECT_URL` para migraciones e introspeccion
+
+En `Prisma 7`, la URL de conexion no se declara dentro de `schema.prisma`.
+
+Por eso en este proyecto:
+
+- `schema.prisma` solo define el `provider`
+- `prisma.config.ts` resuelve el datasource
+- `.env.local` se carga de forma explicita para evitar diferencias con el comportamiento de Next.js
+
+### Scripts de trabajo
+
+Los scripts disponibles actualmente son:
+
+- `npm run prisma:format`
+- `npm run prisma:validate`
+- `npm run prisma:generate`
+- `npm run prisma:db:pull`
+- `npm run prisma:migrate:dev`
+- `npm run prisma:studio`
+
+### Modelo inicial ya definido
+
+El schema inicial de persistencia ya contempla:
+
+- `Institution`
+- `AcademicPeriod`
+- `Campus`
+- `Shift`
+- `AcademicGroup`
+- `Subject`
+- `Classroom`
+- `AcademicLoad`
+
+Este punto es importante porque alinea la persistencia con la realidad ya definida en el producto:
+
+- instituciones como `CESDE` y `SENA`
+- periodos por institucion
+- catalogos reutilizables
+- `carga-academica` como centro operativo
+
 ## 5. Auth.js
 
 Sera la base para autenticacion.

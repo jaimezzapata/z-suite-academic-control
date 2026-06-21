@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { getPanelHomeViewModel } from "@/src/modules/panel/application/get-panel-home-view-model";
 import { PanelHomeScreen } from "@/src/modules/panel/ui/panel-home-screen";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function PanelPage() {
   const session = await auth();

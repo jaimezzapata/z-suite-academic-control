@@ -159,6 +159,52 @@ Responsable de detalles tecnicos como:
 
 La infraestructura depende del dominio, no al reves.
 
+## Estado actual de infraestructura
+
+En el estado actual del proyecto ya existen decisiones tecnicas implementadas, no solo planeadas.
+
+Actualmente ya esta montada la base inicial de infraestructura para:
+
+- autenticacion con `Auth.js` y `Google`
+- persistencia con `PostgreSQL` en `Supabase`
+- acceso a datos con `Prisma`
+- cliente reutilizable de base de datos en `src/shared/lib/prisma.ts`
+
+Esto implica que la capa de infraestructura empieza a tener artefactos concretos que luego deben ser consumidos por los modulos sin romper el principio de responsabilidad unica.
+
+## Persistencia actual con Prisma
+
+La persistencia inicial se definio con `Prisma 7` y un schema base alineado al nucleo del negocio.
+
+Piezas tecnicas actuales:
+
+- `prisma/schema.prisma`
+- `prisma.config.ts`
+- `src/shared/lib/prisma.ts`
+
+Decision tecnica importante:
+
+- la CLI de Prisma se ajusto para cargar `.env.local` de forma explicita
+- `DIRECT_URL` se usa para migraciones e introspeccion
+- `DATABASE_URL` se usa para el cliente de la aplicacion
+
+Esto se hizo para evitar inconsistencias entre el comportamiento de `Next.js` y el de `Prisma CLI`.
+
+## Primeras entidades persistentes
+
+El primer corte del modelo persistente ya define entidades que encajan con la arquitectura del dominio:
+
+- institucion
+- periodo academico
+- sede
+- jornada
+- grupo
+- materia
+- salon
+- carga academica
+
+Este primer paso confirma que `carga-academica` no solo es central en la UI o en la documentacion, sino tambien en la futura capa de datos.
+
 ## Autenticacion inicial
 
 La autenticacion no se modela como un modulo principal del negocio.
@@ -248,6 +294,14 @@ src/
 ```
 
 La carpeta `app/` se mantiene temporalmente en la raiz para no mezclar el arranque arquitectonico con una migracion tecnica prematura de Next.js.
+
+Ademas, en la practica ya existen piezas como:
+
+- `app/` para rutas y layouts de `Next.js`
+- `src/modules/` para los modulos del negocio
+- `src/shared/hooks/` para comportamiento reutilizable del cliente
+- `src/shared/lib/` para utilidades transversales de infraestructura como `prisma`
+- `prisma/` para schema y migraciones
 
 ## Reglas de organizacion
 
@@ -361,6 +415,8 @@ Este nucleo servira como base para agregar despues:
 - documentos
 - drive
 - integraciones externas
+
+En el estado actual, el primer modulo que ya empezo a tomar forma visible y tecnica es `carga-academica`, tanto en UI como en definicion de persistencia.
 
 ## Decisiones tecnicas alineadas
 
