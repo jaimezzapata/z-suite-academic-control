@@ -1,36 +1,218 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Z-Suite Academic Control
 
-## Getting Started
+Aplicacion web pensada como una super app personal para centralizar la gestion laboral y academica del dia a dia.
 
-First, run the development server:
+La idea del proyecto es reunir en un solo sistema las actividades relacionadas con instituciones, periodos, carga academica, horarios, nomina, pendientes, examenes, documentos y drive, de manera que todos los modulos compartan informacion entre si.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Vision
+
+Construir una plataforma personal de trabajo que permita planificar, controlar y automatizar procesos academicos y administrativos desde un unico panel.
+
+No se busca una coleccion de herramientas aisladas, sino un sistema integrado donde:
+
+- las instituciones definan reglas distintas de operacion
+- los periodos organicen el trabajo dentro del anio en curso
+- la carga academica conecte el trabajo real con horarios y nomina
+- el horario impacte la nomina
+- los examenes y documentos nazcan del contexto academico real
+- los pendientes se generen a partir de necesidades reales del trabajo
+- el drive reutilice estructuras repetitivas segun institucion, periodo y grupo
+
+## Objetivo General
+
+Disenar y desarrollar una aplicacion central para organizar, automatizar y dar seguimiento al trabajo academico y profesional en un solo lugar.
+
+## Objetivos Especificos
+
+- Gestionar instituciones con reglas distintas de pago, periodo y operacion.
+- Organizar el trabajo bajo la logica `anio > institucion > periodo`.
+- Centralizar la carga academica como nucleo del sistema.
+- Llevar control de horarios, pagos esperados, pagos recibidos y diferencias.
+- Administrar examenes y documentos vinculados al trabajo academico real.
+- Integrar pendientes para seguimiento diario.
+- Preparar automatizaciones documentales y de Google Drive para etapas posteriores.
+
+## Modulos Principales
+
+Los modulos principales acordados para la app son:
+
+- `Panel`
+- `Instituciones`
+- `Periodos`
+- `Carga academica`
+- `Horarios`
+- `Nomina`
+- `Pendientes`
+- `Examenes`
+- `Documentos`
+- `Drive`
+
+## Estructura Global Del Sistema
+
+La estructura funcional general del sistema se entiende asi:
+
+- contexto: `Instituciones` y `Periodos`
+- operacion: `Carga academica` y `Horarios`
+- control: `Panel`, `Nomina` y `Pendientes`
+- academico-documental: `Examenes`, `Documentos` y `Drive`
+
+El modulo central del sistema es `Carga academica`, porque desde ahi se conectan la mayor parte de relaciones del negocio.
+
+## Enfoque Arquitectonico
+
+El proyecto se construira bajo dos lineamientos principales:
+
+### 1. Responsabilidad unica
+
+Cada modulo, archivo o pieza del sistema debe tener una sola razon de cambio.
+
+### 2. Screaming Architecture
+
+La estructura del proyecto debe gritar el negocio antes que la tecnologia.
+
+Eso significa que la base del proyecto no deberia comenzar por carpetas como `components`, `services` o `utils`, sino por los modulos reales del producto.
+
+Ejemplo conceptual:
+
+```text
+src/
+  modules/
+    panel/
+    instituciones/
+    periodos/
+    carga-academica/
+    horarios/
+    nomina/
+    pendientes/
+    examenes/
+    documentos/
+    drive/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contexto Real Del Proyecto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Actualmente el proyecto parte de esta realidad de trabajo:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- se trabaja con al menos dos instituciones: `CESDE` y `SENA`
+- cada institucion tiene reglas diferentes de periodo y pago
+- `CESDE` maneja semestres o grupos especiales
+- `SENA` maneja trimestres
+- `CESDE` requiere mayor control de nomina porque el pago depende de horas
+- `SENA` puede modelarse despues con mas detalle
+- el anio en curso es el contexto base desde el cual se organiza todo
 
-## Learn More
+## Entidades Clave Del Sistema
 
-To learn more about Next.js, take a look at the following resources:
+Para que la app crezca con orden, debe pensarse alrededor de entidades centrales y no solo de pantallas o herramientas.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Las entidades principales identificadas hasta ahora son:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- institucion
+- anio
+- periodo
+- carga academica
+- horario
+- materia
+- grupo
+- estudiante
+- pago
+- documento
+- plantilla
+- pendiente
 
-## Deploy on Vercel
+## Relacion Entre Modulos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Una parte importante de la vision del proyecto es que los modulos no funcionen por separado.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Relaciones principales:
+
+- `Instituciones` define reglas distintas de operacion, pago y estructura documental.
+- `Periodos` organiza el trabajo bajo la logica `anio > institucion > periodo`.
+- `Carga academica` conecta materias, grupos, horarios y actividad real.
+- `Horarios` alimenta a `Nomina`.
+- `Nomina` depende especialmente de `Instituciones`, `Periodos`, `Carga academica` y `Horarios`.
+- `Pendientes` puede originarse desde cualquier modulo.
+- `Examenes` y `Documentos` dependen del contexto academico definido en `Carga academica`.
+- `Drive` depende de `Instituciones`, `Periodos` y `Grupos`.
+
+## Enfoque De Desarrollo
+
+Antes de programar todas las funcionalidades, se definio que lo correcto es aterrizar el producto y construir primero un nucleo solido.
+
+### Nucleo recomendado
+
+- instituciones
+- periodos
+- carga academica
+- horarios
+- nomina
+- pendientes
+
+Ese nucleo permitira despues conectar examenes, documentos, drive e integraciones futuras.
+
+## MVP Sugerido
+
+### Fase 1
+
+- Gestion de instituciones
+- Gestion de periodos
+- Gestion de carga academica
+- Gestion de horarios
+- Nomina inicial con foco en CESDE
+- Pendientes
+
+### Fase 2
+
+- Panel
+- Examenes
+- Documentos
+
+### Fase 3
+
+- Drive
+- Automatizaciones documentales
+
+### Fase 4
+
+- Integracion con Google Drive
+
+## Stack Tecnologico Recomendado
+
+Aunque el proyecto actual parte de una base en Vite con JavaScript, la recomendacion para construir esta aplicacion de forma mas ordenada y escalable es migrar a un stack mas adecuado para una app full stack modular.
+
+Stack sugerido:
+
+- Next.js
+- TypeScript
+- PostgreSQL
+- Prisma
+- Tailwind CSS
+- shadcn/ui
+- Auth.js
+- Zod
+
+Motivos principales:
+
+- Permite manejar frontend y backend en un mismo proyecto.
+- Facilita modelar relaciones complejas entre modulos.
+- Escala mejor para autenticacion, integraciones, documentos y automatizaciones.
+- TypeScript aporta orden y seguridad en una app con mucha logica de negocio.
+
+## Estado Actual
+
+Actualmente este repositorio funciona como base inicial y espacio de planeacion del producto.
+
+La prioridad en esta etapa es:
+
+- aterrizar la idea
+- definir alcance
+- establecer modulos reales del negocio
+- priorizar el MVP
+- preparar la arquitectura correcta antes de implementar
+- alinear el proyecto con `Screaming Architecture`
+
+## Proposito De Este README
+
+Este documento sirve como resumen inicial de la vision del proyecto y como referencia para las siguientes decisiones de producto, arquitectura y desarrollo.
+
+La documentacion detallada de esta etapa se encuentra en la carpeta `docs`.
