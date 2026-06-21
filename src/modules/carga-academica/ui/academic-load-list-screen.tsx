@@ -1,13 +1,26 @@
+import Link from "next/link";
 import type { AcademicLoadListViewModel } from "@/src/modules/carga-academica/application/get-carga-academica-list-view-model";
+import type { AcademicLoadActionResult } from "@/src/modules/carga-academica/application/create-academic-load-action";
+import type { AcademicLoadListItem } from "@/src/modules/carga-academica/application/get-carga-academica-list-view-model";
+import { AcademicLoadRowActions } from "@/src/modules/carga-academica/ui/academic-load-row-actions";
 
 type AcademicLoadListScreenProps = {
   viewModel: AcademicLoadListViewModel;
   onOpenCreateModal: () => void;
+  onOpenEditModal: (load: AcademicLoadListItem) => void;
+  onDelete: (loadId: string) => Promise<AcademicLoadActionResult>;
+  onToggleStatus: (
+    loadId: string,
+    nextStatus: "ACTIVE" | "CANCELLED",
+  ) => Promise<AcademicLoadActionResult>;
 };
 
 export function AcademicLoadListScreen({
   viewModel,
   onOpenCreateModal,
+  onOpenEditModal,
+  onDelete,
+  onToggleStatus,
 }: AcademicLoadListScreenProps) {
   return (
     <section className="space-y-4 text-slate-950">
@@ -25,13 +38,21 @@ export function AcademicLoadListScreen({
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={onOpenCreateModal}
-            className="inline-flex cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-slate-800"
-          >
-            {viewModel.primaryActionLabel}
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Link
+              href={viewModel.secondaryActionHref}
+              className="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-50"
+            >
+              {viewModel.secondaryActionLabel}
+            </Link>
+            <button
+              type="button"
+              onClick={onOpenCreateModal}
+              className="inline-flex cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-slate-800"
+            >
+              {viewModel.primaryActionLabel}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -83,6 +104,7 @@ export function AcademicLoadListScreen({
                   <th className="px-3 py-1.5 font-medium">Horario</th>
                   <th className="px-3 py-1.5 font-medium">Ubicacion</th>
                   <th className="px-3 py-1.5 font-medium">Estado</th>
+                  <th className="px-3 py-1.5 font-medium text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +115,9 @@ export function AcademicLoadListScreen({
                         <p className="font-semibold text-slate-950">
                           {load.subject}
                         </p>
-                        <p className="mt-1 text-slate-500">{load.shift}</p>
+                        <p className="mt-1 text-slate-500">
+                          {load.shift} · {load.daysLabel}
+                        </p>
                       </div>
                     </td>
                     <td className="px-3 py-3 text-slate-700">
@@ -102,7 +126,12 @@ export function AcademicLoadListScreen({
                     <td className="px-3 py-3 text-slate-700">{load.period}</td>
                     <td className="px-3 py-3 text-slate-700">{load.group}</td>
                     <td className="px-3 py-3 text-slate-700">
-                      {load.startTime} - {load.endTime}
+                      <p>
+                        {load.startTime} - {load.endTime}
+                      </p>
+                      <p className="mt-1 text-slate-500">
+                        Equivale a {load.recognizedHoursLabel} semanales
+                      </p>
                     </td>
                     <td className="px-3 py-3 text-slate-700">
                       <p>{load.campus}</p>
@@ -113,11 +142,23 @@ export function AcademicLoadListScreen({
                         className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                           load.status === "Activa"
                             ? "bg-emerald-100 text-emerald-700"
-                            : "bg-amber-100 text-amber-700"
+                            : load.status === "Pendiente"
+                              ? "bg-amber-100 text-amber-700"
+                              : load.status === "Completada"
+                                ? "bg-sky-100 text-sky-700"
+                                : "bg-rose-100 text-rose-700"
                         }`}
                       >
                         {load.status}
                       </span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <AcademicLoadRowActions
+                        load={load}
+                        onEdit={onOpenEditModal}
+                        onDelete={onDelete}
+                        onToggleStatus={onToggleStatus}
+                      />
                     </td>
                   </tr>
                 ))}

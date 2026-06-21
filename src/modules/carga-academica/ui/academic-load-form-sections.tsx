@@ -1,13 +1,21 @@
-import type { AcademicLoadFormViewModel } from "@/src/modules/carga-academica/application/get-carga-academica-form-view-model";
+import Link from "next/link";
+import type {
+  AcademicLoadFormValues,
+  AcademicLoadFormViewModel,
+} from "@/src/modules/carga-academica/application/get-carga-academica-form-view-model";
 
 type AcademicLoadFormSectionsProps = {
   sections: AcademicLoadFormViewModel["sections"];
   compact?: boolean;
+  disabled?: boolean;
+  values?: Partial<AcademicLoadFormValues>;
 };
 
 export function AcademicLoadFormSections({
   sections,
   compact = false,
+  disabled = false,
+  values,
 }: AcademicLoadFormSectionsProps) {
   return (
     <div className={compact ? "grid gap-4 xl:grid-cols-2" : "space-y-6"}>
@@ -45,21 +53,38 @@ export function AcademicLoadFormSections({
                 key={field.label}
                 className={`block ${field.fieldType === "textarea" || field.fieldType === "checkbox-group" ? "md:col-span-2" : ""}`}
               >
-                <span className="mb-2 block text-sm font-medium text-slate-700">
-                  {field.label}
+                <span className="mb-2 flex items-center justify-between gap-3">
+                  <span className="block text-sm font-medium text-slate-700">
+                    {field.label}
+                  </span>
+                  {field.actionLink ? (
+                    <Link
+                      href={field.actionLink.href}
+                      className="text-xs font-semibold text-slate-600 underline decoration-slate-300 underline-offset-4 transition-colors duration-200 hover:text-slate-950"
+                    >
+                      {field.actionLink.label}
+                    </Link>
+                  ) : null}
                 </span>
 
                 {field.fieldType === "textarea" ? (
                   <textarea
+                    name={field.name}
                     rows={compact ? 4 : 5}
                     placeholder={field.placeholder}
+                    defaultValue={getFieldValue(values, field.name)}
+                    required={field.required}
+                    disabled={disabled}
                     className={`w-full rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-950 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-slate-400 ${
                       compact ? "px-3.5 py-2.5" : "px-4 py-3"
                     }`}
                   />
                 ) : field.fieldType === "select" ? (
                   <select
-                    defaultValue=""
+                    name={field.name}
+                    defaultValue={getFieldValue(values, field.name)}
+                    required={field.required}
+                    disabled={disabled}
                     className={`w-full rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-950 outline-none transition-colors duration-200 focus:border-slate-400 ${
                       compact ? "px-3.5 py-2.5" : "px-4 py-3"
                     }`}
@@ -76,6 +101,10 @@ export function AcademicLoadFormSections({
                 ) : field.fieldType === "time" ? (
                   <input
                     type="time"
+                    name={field.name}
+                    defaultValue={getFieldValue(values, field.name)}
+                    required={field.required}
+                    disabled={disabled}
                     className={`w-full rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-950 outline-none transition-colors duration-200 focus:border-slate-400 ${
                       compact ? "px-3.5 py-2.5" : "px-4 py-3"
                     }`}
@@ -83,6 +112,10 @@ export function AcademicLoadFormSections({
                 ) : field.fieldType === "date" ? (
                   <input
                     type="date"
+                    name={field.name}
+                    defaultValue={getFieldValue(values, field.name)}
+                    required={field.required}
+                    disabled={disabled}
                     className={`w-full rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-950 outline-none transition-colors duration-200 focus:border-slate-400 ${
                       compact ? "px-3.5 py-2.5" : "px-4 py-3"
                     }`}
@@ -102,7 +135,14 @@ export function AcademicLoadFormSections({
                       >
                         <input
                           type="checkbox"
+                          name={field.name}
                           value={option.value}
+                          defaultChecked={hasCheckboxValue(
+                            values,
+                            field.name,
+                            option.value,
+                          )}
+                          disabled={disabled}
                           className="h-4 w-4 rounded border-slate-300 text-slate-950"
                         />
                         <span>{option.label}</span>
@@ -112,12 +152,22 @@ export function AcademicLoadFormSections({
                 ) : (
                   <input
                     type="text"
+                    name={field.name}
                     placeholder={field.placeholder}
+                    defaultValue={getFieldValue(values, field.name)}
+                    required={field.required}
+                    disabled={disabled}
                     className={`w-full rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-950 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-slate-400 ${
                       compact ? "px-3.5 py-2.5" : "px-4 py-3"
                     }`}
                   />
                 )}
+
+                {field.hint ? (
+                  <span className="mt-2 block text-xs leading-5 text-slate-500">
+                    {field.hint}
+                  </span>
+                ) : null}
               </label>
             ))}
           </div>
@@ -125,4 +175,23 @@ export function AcademicLoadFormSections({
       ))}
     </div>
   );
+}
+
+function getFieldValue(
+  values: Partial<AcademicLoadFormValues> | undefined,
+  fieldName: keyof AcademicLoadFormValues,
+) {
+  const value = values?.[fieldName];
+
+  return typeof value === "string" ? value : "";
+}
+
+function hasCheckboxValue(
+  values: Partial<AcademicLoadFormValues> | undefined,
+  fieldName: keyof AcademicLoadFormValues,
+  optionValue: string,
+) {
+  const value = values?.[fieldName];
+
+  return Array.isArray(value) ? value.includes(optionValue) : false;
 }
