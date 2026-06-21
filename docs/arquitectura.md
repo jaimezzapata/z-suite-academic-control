@@ -200,6 +200,19 @@ src/
     ...
 ```
 
+## Implementacion actual del encarpetado
+
+Como primer paso, el proyecto ya puede usar:
+
+```text
+app/
+src/
+  modules/
+  shared/
+```
+
+La carpeta `app/` se mantiene temporalmente en la raiz para no mezclar el arranque arquitectonico con una migracion tecnica prematura de Next.js.
+
 ## Reglas de organizacion
 
 - cada modulo define su propio lenguaje y responsabilidades
