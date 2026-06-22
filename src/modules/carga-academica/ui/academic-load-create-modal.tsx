@@ -8,7 +8,10 @@ import type {
   AcademicLoadFormValues,
   AcademicLoadFormViewModel,
 } from "@/src/modules/carga-academica/application/get-carga-academica-form-view-model";
+import { AcademicLoadFormFiltersModal } from "@/src/modules/carga-academica/ui/academic-load-form-filters-modal";
 import { AcademicLoadFormSections } from "@/src/modules/carga-academica/ui/academic-load-form-sections";
+import { AcademicLoadFormToolbar } from "@/src/modules/carga-academica/ui/academic-load-form-toolbar";
+import { useAcademicLoadFormFilters } from "@/src/shared/hooks/carga-academica/use-academic-load-form-filters";
 
 type AcademicLoadCreateModalProps = {
   viewModel: AcademicLoadFormViewModel;
@@ -32,6 +35,24 @@ export function AcademicLoadCreateModal({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const {
+    activeInstitutionId,
+    setActiveInstitutionId,
+    institutionTabs,
+    filteredSections,
+    isFilterModalOpen,
+    openFilterModal,
+    closeFilterModal,
+    draftSearch,
+    setDraftSearch,
+    appliedSearch,
+    applyFilters,
+    clearFilters,
+  } = useAcademicLoadFormFilters({
+    viewModel,
+    values,
+    isOpen,
+  });
 
   if (!isOpen) {
     return null;
@@ -112,12 +133,22 @@ export function AcademicLoadCreateModal({
         >
           {mode === "edit" && loadId ? <input type="hidden" name="loadId" value={loadId} /> : null}
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5">
-            <AcademicLoadFormSections
-              sections={viewModel.sections}
-              compact
-              disabled={isSubmitting}
-              values={values}
-            />
+            <div className="space-y-4">
+              <AcademicLoadFormToolbar
+                institutions={institutionTabs}
+                activeInstitutionId={activeInstitutionId}
+                onSelectInstitution={setActiveInstitutionId}
+                onOpenFilters={openFilterModal}
+                hasActiveFilters={appliedSearch.length > 0}
+                disabled={isSubmitting}
+              />
+              <AcademicLoadFormSections
+                sections={filteredSections}
+                compact
+                disabled={isSubmitting}
+                values={values}
+              />
+            </div>
             {formError ? (
               <p className="mt-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                 {formError}
@@ -144,6 +175,15 @@ export function AcademicLoadCreateModal({
           </div>
         </form>
       </div>
+
+      <AcademicLoadFormFiltersModal
+        isOpen={isFilterModalOpen}
+        searchValue={draftSearch}
+        onSearchChange={setDraftSearch}
+        onClose={closeFilterModal}
+        onClear={clearFilters}
+        onApply={applyFilters}
+      />
     </div>
   );
 }

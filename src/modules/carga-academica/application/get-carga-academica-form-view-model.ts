@@ -3,10 +3,12 @@ import { getAcademicCatalogSnapshot } from "@/src/modules/carga-academica/infras
 export type AcademicLoadFormFieldOption = {
   label: string;
   value: string;
+  institutionId?: string;
+  institutionName?: string;
 };
 
 export type AcademicLoadFormField = {
-  name: string;
+  name: keyof AcademicLoadFormValues;
   label: string;
   placeholder?: string;
   hint?: string;
@@ -51,6 +53,10 @@ export type AcademicLoadFormViewModel = {
   description: string;
   primaryActionLabel: string;
   secondaryActionLabel: string;
+  institutions: Array<{
+    id: string;
+    name: string;
+  }>;
   sections: AcademicLoadFormSection[];
 };
 
@@ -70,6 +76,10 @@ export async function getAcademicLoadFormViewModel(): Promise<AcademicLoadFormVi
       "Esta version inicial usa catalogos reutilizables para que registres sede, jornada, grupo, materia, fechas, horas y salon sin repetir informacion manualmente.",
     primaryActionLabel: "Guardar carga",
     secondaryActionLabel: "Volver al listado",
+    institutions: catalogs.institutions.map((institution) => ({
+      id: institution.id,
+      name: institution.name,
+    })),
     sections: [
       {
         title: "Datos base",
@@ -229,6 +239,7 @@ function createPeriodOptions(
     year: number;
     label: string;
     institution: {
+      id: string;
       name: string;
     };
   }>,
@@ -236,6 +247,8 @@ function createPeriodOptions(
   return items.map((item) => ({
     label: `${item.institution.name} · ${item.year} · ${item.label}`,
     value: item.id,
+    institutionId: item.institution.id,
+    institutionName: item.institution.name,
   }));
 }
 
@@ -244,6 +257,7 @@ function createCatalogOptions(
     id: string;
     name: string;
     institution: {
+      id: string;
       name: string;
     };
   }>,
@@ -251,5 +265,7 @@ function createCatalogOptions(
   return items.map((item) => ({
     label: `${item.institution.name} · ${item.name}`,
     value: item.id,
+    institutionId: item.institution.id,
+    institutionName: item.institution.name,
   }));
 }

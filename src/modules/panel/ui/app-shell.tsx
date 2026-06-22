@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useAppShellSidebar } from "@/src/shared/hooks/layout/use-app-shell-sidebar";
 import type { AppShellViewModel } from "@/src/modules/panel/application/get-app-shell-view-model";
 import { SignOutButton } from "@/src/shared/ui/auth/sign-out-button";
@@ -14,7 +15,16 @@ type AppShellProps = {
 
 export function AppShell({ viewModel, children }: AppShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { closeSidebar, isSidebarOpen, toggleSidebar } = useAppShellSidebar();
+
+  useEffect(() => {
+    for (const item of viewModel.navigationItems) {
+      if (item.isAvailable) {
+        router.prefetch(item.href);
+      }
+    }
+  }, [router, viewModel.navigationItems]);
 
   return (
     <div className="min-h-screen bg-[#f6f7fb] text-slate-950">
@@ -98,7 +108,9 @@ export function AppShell({ viewModel, children }: AppShellProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch
                     onClick={closeSidebar}
+                    onMouseEnter={() => router.prefetch(item.href)}
                     className={`flex cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors duration-200 ${
                       isActive
                         ? "bg-slate-100 text-slate-950"
@@ -162,7 +174,7 @@ export function AppShell({ viewModel, children }: AppShellProps) {
 
         <div className="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-[clamp(220px,17vw,260px)]">
           <header className="sticky top-0 z-20 border-b border-slate-200 bg-[#f6f7fb]/90 backdrop-blur">
-            <div className="flex items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -196,7 +208,7 @@ export function AppShell({ viewModel, children }: AppShellProps) {
             </div>
           </header>
 
-          <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
+          <main className="min-w-0 flex-1 px-4 py-4 sm:px-6 lg:px-8 lg:py-5">
             {children}
           </main>
         </div>

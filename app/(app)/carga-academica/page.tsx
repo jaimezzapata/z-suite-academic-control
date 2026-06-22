@@ -9,8 +9,10 @@ import { getAcademicLoadListViewModel } from "@/src/modules/carga-academica/appl
 import { AcademicLoadModule } from "@/src/modules/carga-academica/ui/academic-load-module";
 
 export default async function AcademicLoadPage() {
-  const listViewModel = await getAcademicLoadListViewModel();
-  const formViewModel = await getAcademicLoadFormViewModel();
+  const [listViewModel, formViewModel] = await Promise.all([
+    getAcademicLoadListViewModel(),
+    getAcademicLoadFormViewModel(),
+  ]);
 
   return (
     <AcademicLoadModule

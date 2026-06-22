@@ -100,7 +100,8 @@ export async function getAcademicLoadListViewModel(): Promise<AcademicLoadListVi
       )
     );
   }, 0);
-  const focusInstitution = getFocusInstitution(academicLoads);
+  const cesdeStats = getInstitutionSummary(academicLoads, "cesde");
+  const senaStats = getInstitutionSummary(academicLoads, "sena");
 
   return {
     badge: "Carga academica",
@@ -112,23 +113,19 @@ export async function getAcademicLoadListViewModel(): Promise<AcademicLoadListVi
     secondaryActionHref: "/carga-academica/catalogos",
     summary: [
       {
-        label: "Cargas activas",
+        label: "Total",
         value: String(activeLoadsCount),
-        helper:
-          activeLoadsCount === 0
-            ? "Aun no hay bloques activos registrados."
-            : "Bloques operativos actualmente en seguimiento.",
+        helper: `${formatRecognizedHours(totalRecognizedWeeklyHours)} semanales en seguimiento`,
       },
       {
-        label: "Horas semanales",
-        value: formatRecognizedHours(totalRecognizedWeeklyHours),
-        helper:
-          "Calculadas segun la duracion de hora academica definida por institucion",
+        label: "CESDE",
+        value: String(cesdeStats.loadsCount),
+        helper: `${formatRecognizedHours(cesdeStats.recognizedWeeklyHours)} semanales en CESDE`,
       },
       {
-        label: "Institucion foco",
-        value: focusInstitution ?? "Sin datos",
-        helper: "Institucion con mayor volumen de cargas registradas",
+        label: "SENA",
+        value: String(senaStats.loadsCount),
+        helper: `${formatRecognizedHours(senaStats.recognizedWeeklyHours)} semanales en SENA`,
       },
     ],
     loads,
@@ -189,22 +186,35 @@ function formatRecognizedHours(totalHours: number) {
   return Number.isInteger(totalHours) ? `${totalHours} h` : `${totalHours.toFixed(1)} h`;
 }
 
-function getFocusInstitution(
+function getInstitutionSummary(
   loads: Array<{
+    status: "ACTIVE" | "PENDING" | "COMPLETED" | "CANCELLED";
+    startsAt: string;
+    endsAt: string;
+    teachingDays: readonly string[];
     institution: {
       name: string;
     };
   }>,
+  institutionKey: string,
 ) {
-  if (loads.length === 0) {
-    return null;
-  }
+  return loads.reduce(
+    (summary, load) => {
+      if (load.institution.name.trim().toLowerCase().includes(institutionKey)) {
+        summary.loadsCount += load.status === "ACTIVE" ? 1 : 0;
+        summary.recognizedWeeklyHours += getRecognizedWeeklyHours(
+          load.startsAt,
+          load.endsAt,
+          load.teachingDays as AcademicLoadClassDay[],
+          getInstitutionAcademicHourMinutes(load.institution),
+        );
+      }
 
-  const counts = new Map<string, number>();
-
-  for (const load of loads) {
-    counts.set(load.institution.name, (counts.get(load.institution.name) ?? 0) + 1);
-  }
-
-  return [...counts.entries()].sort((left, right) => right[1] - left[1])[0]?.[0] ?? null;
+      return summary;
+    },
+    {
+      loadsCount: 0,
+      recognizedWeeklyHours: 0,
+    },
+  );
 }

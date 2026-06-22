@@ -34,7 +34,7 @@ export function getAppShellViewModel(
       createNavigationItem("/instituciones", "Instituciones", false),
       createNavigationItem("/periodos", "Periodos", false),
       createNavigationItem("/carga-academica", "Carga academica", true),
-      createNavigationItem("/horarios", "Horarios", false),
+      createNavigationItem("/horarios", "Horarios", true),
       createNavigationItem("/nomina", "Nomina", false),
       createNavigationItem("/pendientes", "Pendientes", false),
       createNavigationItem("/examenes", "Examenes", false),
